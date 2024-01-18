@@ -4,208 +4,178 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Binary_tree
+namespace Generalized_List
 {
     class Program
     {
         static void Main(string[] args)
         {
-            BinarytreeNode A = new BinarytreeNode(18);
-            BinarytreeNode B = new BinarytreeNode(16);
-            BinarytreeNode C = new BinarytreeNode(4);
-            BinarytreeNode D = new BinarytreeNode(6, C, null);
-            BinarytreeNode E = new BinarytreeNode(17, B, A);
-            BinarytreeNode F = new BinarytreeNode(15, D, E);
+           
+
+            node h = new node(false, 10, null);
+            node f = new node(false, 12, h);
+            node t = new node(true, f, null);
+            node q = new node(false, 13, t);
+            node p = new node(false, 12, q);
 
 
-            //BinarytreeNode.ADDNode(F,1);
-            //BinarytreeNode.DeleteNode(F, 17);
-            Console.Write("tree is :");
-            BinarytreeNode.printtree(F);
+            node H = new node(false, 10, null);
+            node F = new node(false, 12, H);
+            node T = new node(true, F, null);
+            node Q = new node(false, 13, T);
+            node P = new node(false, 12, Q);
+
+            node s = new node(false, 8, null);
+            node n = new node(true,s,null);
+            node m = new node(false, 6, n);
+            
+            //GeneralizedList.ADD(p, m);
+
+            GeneralizedList.GENlistPrint(p);
             Console.WriteLine("");
-            Console.WriteLine("number of levels =" + BinarytreeNode.numberoflevels(F));
-            Console.WriteLine("Sum of tree node =" + BinarytreeNode.SumofNode(F));
-            Console.WriteLine("number of nodes in tree =" + BinarytreeNode.countNode(F));
-            Console.WriteLine("number of leaves in the tree is :" + BinarytreeNode.countLeaves(F));
-            Console.Write("preorder :");
-            BinarytreeNode.preorder(F);
-            Console.Write("    inorder :");
-            BinarytreeNode.inorder(F);
-            Console.Write("     postorder :");
-            BinarytreeNode.postorder(F);
+            GeneralizedList.GENlistPrint(P);
 
-            Console.ReadKey();
+            Console.WriteLine("");
+            Console.Write("sum of the generalizedlist is :");
+            Console.Write(GeneralizedList.Sumgen(p));
+            Console.WriteLine("");
+            Console.Write("Depth of the generalizedlist is :");
+            Console.Write(GeneralizedList.depth(p));
+            Console.WriteLine("");
+            if(GeneralizedList.Equal(p,P)==1)
+                Console.WriteLine("Equal");
+            else
+                Console.WriteLine("not Equal");
 
-
-
-
-
+            Console.ReadLine();
 
         }
     }
-    class BinarytreeNode
+    class node
     {
+
+        public bool tag;
         public int data;
-        public BinarytreeNode Left;
-        public BinarytreeNode Right;
+        public node Slink;
+        public node link;
 
-        public BinarytreeNode(int D)
+
+        public node(bool t, node Dl, node L)
         {
-            data = D;
-            Left = null;
-            Right = null;
+            tag = t;
+            Slink = Dl;
+            link = L;
+            data = 0;
         }
-
-        public BinarytreeNode(int D, BinarytreeNode L, BinarytreeNode R)
+        public node(bool t, int dat, node L)
         {
-            data = D;
-            Left = L;
-            Right = R;
-        }
-
-        public static BinarytreeNode ADDNode(BinarytreeNode R, int Dataa)
-        {
-            if (R == null)
-            {
-                return new BinarytreeNode(Dataa);
-            }
-            if (Dataa < R.data)
-            {
-                R.Left = ADDNode(R.Left, Dataa);
-            }
-            else if (Dataa > R.data)
-            {
-                R.Right = ADDNode(R.Right, Dataa);
-            }
-
-            return R;
-        }
-
-        public static BinarytreeNode minnode(BinarytreeNode R)
-        {
-            BinarytreeNode min = R;
-
-            while (min.Left != null)
-            {
-                min = min.Left;
-            }
-            return min;
-        }
-        public static BinarytreeNode DeleteNode(BinarytreeNode R, int key)
-        {
-            if (R == null)
-                return null;
-            if (key < R.data)
-                R.Left = DeleteNode(R.Left, key);
-            else if (key > R.data)
-                R.Right = DeleteNode(R.Right, key);
-            else
-            {
-                if (R.Left == null)
-                {
-                    BinarytreeNode temp = R.Right;
-                    R = null;
-                    return temp;
-                }
-                else if (R.Right == null)
-                {
-                    BinarytreeNode temp = R.Left;
-                    R = null;
-                    return temp;
-                }
-
-                BinarytreeNode tempe = BinarytreeNode.minnode(R.Right);
-                R.data = tempe.data;
-                R.Right = DeleteNode(R.Right, tempe.data);
-
-            }
-            return R;
+            tag = t;
+            data = dat;
+            link = L;
+            Slink = null;
 
         }
 
 
 
-        public static int numberoflevels(BinarytreeNode R)
+
+
+
+
+
+
+    }
+
+    class GeneralizedList
+    {
+
+        public static void ADD(node p,node d)
         {
-            if (R == null)
+            node f = p;
+            p = p.link;
+            while (p != null)
             {
+                p = p.link;
+                f = f.link;
+            }
+            f.link = d;
+            
+        }
+
+
+
+        public static void GENlistPrint(node p)
+        {
+
+            Console.Write("<");
+            while (p != null)
+            {
+                Console.Write(",");
+                if (p.tag == false)
+                { Console.Write(p.data); }
+                else
+                    GENlistPrint(p.Slink);
+                p = p.link;
+            }
+            Console.Write(">");
+        }
+        public static int Sumgen(node p)
+        {
+            int s = 0;
+            while (p != null)
+            {
+                if (p.tag == false)
+                    s += p.data;
+                else
+                    s += Sumgen(p.Slink);
+                p = p.link;
+            }
+            return s;
+        }
+        public static int depth(node p)
+        {
+            if (p == null)
                 return 0;
-
+            node s = p;
+            int m = 1;
+            while (s != null)
+            {
+                if (s.tag)
+                {
+                    int n = depth(p.Slink);
+                    if (m < n)
+                        m = n;
+                }
+                s = s.link;
             }
-
-            int leftH = numberoflevels(R.Left);
-            int rightH = numberoflevels(R.Right);
-            return 1 + Math.Max(leftH, rightH);
+            return m + 1;
         }
 
-        public static int countNode(BinarytreeNode r)
+        public static int Equal(node p, node q)
         {
-            if (r == null)
-            {
-                return (0);
-
-            }
-            else return (1 + countNode(r.Left) + countNode(r.Right));
-
-        }
-        public static int countLeaves(BinarytreeNode R)
-        {
-            if (R == null)
-            {
-                return 0;
-            }
-            if (R.Left == null && R.Right == null)
-            {
+            int a=0;
+            if (p == null && q == null)
                 return 1;
-            }
-            return countLeaves(R.Left) + countLeaves(R.Right);
-
-        }
-
-        public static void preorder(BinarytreeNode R)
-        {
-            if (R == null)
-                return;
-            Console.Write(R.data + ",");
-            preorder(R.Left);
-            preorder(R.Right);
-        }
-        public static void inorder(BinarytreeNode R)
-        {
-            if (R == null)
-                return;
-            inorder(R.Left);
-            Console.Write(R.data + ",");
-            inorder(R.Right);
-        }
-        public static void postorder(BinarytreeNode R)
-        {
-            if (R == null)
-                return;
-            postorder(R.Left);
-            postorder(R.Right);
-            Console.Write(R.data + ",");
-
-        }
-        public static int SumofNode(BinarytreeNode R)
-        {
-            if (R == null) return 0;
-            return SumofNode(R.Left) + SumofNode(R.Right) + R.data;
-
-        }
-        public static void printtree(BinarytreeNode R)
-        {
-
-
-            if (R != null)
+            if (p != null && q != null && p.tag == q.tag)
             {
-                printtree(R.Left);
-                Console.Write(R.data + " ");
-                printtree(R.Right);
+                if (p.tag == false)
+                    if (p.data == q.data)
+                        a=1;
+                    else
+                        a=0;
+ 
+                else
+                   a=Equal(p.Slink,q.Slink);
+
+                     if(a==1)
+                         return Equal(p.link,q.link);
 
             }
-        }
 
+            return a;
+
+
+        }
 
 
 
