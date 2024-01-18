@@ -4,181 +4,266 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Generalized_List
+namespace prefix_infix_postfix
 {
     class Program
     {
         static void Main(string[] args)
         {
-           
+            Console.WriteLine("prefix--to--infix--press 1");
 
-            node h = new node(false, 10, null);
-            node f = new node(false, 12, h);
-            node t = new node(true, f, null);
-            node q = new node(false, 13, t);
-            node p = new node(false, 12, q);
+            Console.WriteLine("infix--to--postfix--press 2");
+
+            Console.WriteLine("prefix--to--postfix--press 3");
+
+            Console.WriteLine("infix--to--prefix--press 4");
+
+            Console.WriteLine("postfix--to--infix--press 5");
+
+            Console.WriteLine("postfix--to--prefix--press 6");
+
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            switch (n)
+            {
+                case 1:
+                    {
+                        Console.WriteLine("PREFIX :");
+                        Console.WriteLine(PrefixToInfix.ConvertPrefixToInfix(Console.ReadLine()));
+                    }
+                    break;
+                case 2:
+                    {
+                        Console.WriteLine("INFIX :");
+                        Console.WriteLine(InfixToPostfix.ConvertToPostfix(Console.ReadLine()));
+                    }
+                    break;
+                case 3:
+                    {
+                        Console.WriteLine("PREFIX :");
+                        string q = (InfixToPostfix.ConvertToPostfix(Console.ReadLine()));
+                        Console.WriteLine(InfixToPostfix.ConvertToPostfix(q));
+                    }
+                    break;
+                case 4:
+                    {
+                        Console.WriteLine("INFIX :");
+                        Console.WriteLine(infixtoprefix.converttoinfix(Console.ReadLine()));
+                    }
+                    break;
+                case 5:
+                    {
+                        Console.WriteLine("POSTFIX :");
+                        Console.WriteLine(postfixtoinfix.convertpostfixtoinfix(Console.ReadLine()));
+
+                    }
+                    break;
+                case 6:
+                    {
+                        Console.WriteLine("POSTFIX :");
+
+                        string a = postfixtoinfix.convertpostfixtoinfix(Console.ReadLine());
+                        string aa = a.Replace(")", "(");
+
+                        string b = infixtoprefix.converttoinfix(aa);
+                        string bb = b.Replace("(", "").Replace(")", "");
+                        Console.WriteLine(bb);
+
+                    }
+                    break;
 
 
-            node H = new node(false, 10, null);
-            node F = new node(false, 12, H);
-            node T = new node(true, F, null);
-            node Q = new node(false, 13, T);
-            node P = new node(false, 12, Q);
+            }
 
-            node s = new node(false, 8, null);
-            node n = new node(true,s,null);
-            node m = new node(false, 6, n);
-            
-            //GeneralizedList.ADD(p, m);
 
-            GeneralizedList.GENlistPrint(p);
-            Console.WriteLine("");
-            GeneralizedList.GENlistPrint(P);
 
-            Console.WriteLine("");
-            Console.Write("sum of the generalizedlist is :");
-            Console.Write(GeneralizedList.Sumgen(p));
-            Console.WriteLine("");
-            Console.Write("Depth of the generalizedlist is :");
-            Console.Write(GeneralizedList.depth(p));
-            Console.WriteLine("");
-            if(GeneralizedList.Equal(p,P)==1)
-                Console.WriteLine("Equal");
+
+
+            Console.ReadKey();
+
+
+
+
+        }
+    }
+    class Stackm<T>
+    {
+        private static int top;
+        private T[] items;
+
+
+        public Stackm(int n)
+        {
+            items = new T[n];
+
+            top = -1;
+
+        }
+
+        public void add(T item)
+        {
+            if (isfull())
+            {
+                Console.WriteLine("stack is full");
+
+            }
             else
-                Console.WriteLine("not Equal");
-
-            Console.ReadLine();
-
+                items[++top] = item;
         }
-    }
-    class node
-    {
-
-        public bool tag;
-        public int data;
-        public node Slink;
-        public node link;
-
-
-        public node(bool t, node Dl, node L)
+        public T delete()
         {
-            tag = t;
-            Slink = Dl;
-            link = L;
-            data = 0;
+            if (top == -1)
+            {
+                Console.WriteLine("stack is empty");
+            }
+            return items[top--];
+
         }
-        public node(bool t, int dat, node L)
+
+        public Boolean isfull()
         {
-            tag = t;
-            data = dat;
-            link = L;
-            Slink = null;
-
+            if (top == items.Length - 1)
+            {
+                return true;
+            }
+            else return false;
         }
-
-
-
-
-
-
-
-
+        public T peek()
+        {
+            if (top == -1)
+            {
+                Console.WriteLine("the stack is empty");
+            }
+            return items[top];
+        }
+        public int count()
+        {
+            return top + 1;
+        }
 
     }
-
-    class GeneralizedList
+    class postfixtoinfix
     {
 
-        public static void ADD(node p,node d)
+        public static string convertpostfixtoinfix(string postfix)
         {
-            node f = p;
-            p = p.link;
-            while (p != null)
-            {
-                p = p.link;
-                f = f.link;
-            }
-            f.link = d;
-            
-        }
+            Stackm<string> st = new Stackm<string>(50);
 
-
-
-        public static void GENlistPrint(node p)
-        {
-
-            Console.Write("<");
-            while (p != null)
+            foreach (var item in postfix)
             {
-                Console.Write(",");
-                if (p.tag == false)
-                { Console.Write(p.data); }
-                else
-                    GENlistPrint(p.Slink);
-                p = p.link;
-            }
-            Console.Write(">");
-        }
-        public static int Sumgen(node p)
-        {
-            int s = 0;
-            while (p != null)
-            {
-                if (p.tag == false)
-                    s += p.data;
-                else
-                    s += Sumgen(p.Slink);
-                p = p.link;
-            }
-            return s;
-        }
-        public static int depth(node p)
-        {
-            if (p == null)
-                return 0;
-            node s = p;
-            int m = 1;
-            while (s != null)
-            {
-                if (s.tag)
+                char h = item;
+                if (h == '+' || h == '-' || h == '*' || h == '/')
                 {
-                    int n = depth(p.Slink);
-                    if (m < n)
-                        m = n;
+                    string operand1 = st.delete();
+                    string operand2 = st.delete();
+                    string newexpression = "(" + operand2 + h + operand1 + ")";
+                    st.add(newexpression);
+
                 }
-                s = s.link;
-            }
-            return m + 1;
-        }
-
-        public static int Equal(node p, node q)
-        {
-            int a=0;
-            if (p == null && q == null)
-                return 1;
-            if (p != null && q != null && p.tag == q.tag)
-            {
-                if (p.tag == false)
-                    if (p.data == q.data)
-                        a=1;
-                    else
-                        a=0;
- 
                 else
-                   a=Equal(p.Slink,q.Slink);
+                {
+                    st.add(h.ToString());
+                }
 
-                     if(a==1)
-                         return Equal(p.link,q.link);
 
             }
 
-            return a;
-
-
+            return st.delete();
         }
 
+    }
+    public class PrefixToInfix
+    {
+        public static string ConvertPrefixToInfix(string prefix)
+        {
+            Stack<string> st = new Stack<string>();
 
+            for (int i = prefix.Length - 1; i >= 0; i--)
+            {
+                char c = prefix[i];
 
+                if (c == '+' || c == '-' || c == '*' || c == '/')
+                {
+                    string operand1 = st.Pop();
+                    string operand2 = st.Pop();
+                    string infixExpression = "(" + operand1 + c + operand2 + ")";
+                    st.Push(infixExpression);
+                }
+                else
+                {
+                    st.Push(c.ToString());
+                }
+            }
+
+            return st.Pop();
+        }
+
+    }
+
+    class InfixToPostfix
+    {
+        public static int Precedence(char c)
+        {
+            if (c == '+' || c == '-')
+                return 1;
+            else if (c == '*' || c == '/')
+                return 2;
+            else
+                return 0;
+        }
+
+        public static string ConvertToPostfix(string infix)
+        {
+            string postfix = "";
+            Stack<char> stack = new Stack<char>();
+
+            for (int i = 0; i < infix.Length; i++)
+            {
+                char c = infix[i];
+                if (Char.IsLetterOrDigit(c))
+                {
+                    postfix += c;
+                }
+                else if (c == '(')
+                {
+                    stack.Push(c);
+                }
+                else if (c == ')')
+                {
+                    while (stack.Count > 0 && stack.Peek() != '(')
+                    {
+                        postfix += stack.Pop();
+                    }
+                    stack.Pop();
+                }
+                else
+                {
+                    while (stack.Count > 0 && Precedence(c) <= Precedence(stack.Peek()))
+                    {
+                        postfix += stack.Pop();
+                    }
+                    stack.Push(c);
+                }
+            }
+
+            while (stack.Count > 0)
+            {
+                postfix += stack.Pop();
+            }
+
+            return postfix;
+        }
+    }
+    class infixtoprefix
+    {
+        public static string converttoinfix(string infix)
+        {
+            string reverseinfix = new string(infix.Reverse().ToArray());
+            string postfix = InfixToPostfix.ConvertToPostfix(reverseinfix);
+            string prefix = new string(postfix.Reverse().ToArray());
+            return prefix;
+
+        }
 
 
 
